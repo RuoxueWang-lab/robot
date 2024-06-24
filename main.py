@@ -1,13 +1,15 @@
+import random
+
 name = input('What is the name of the robot?')
 identifier = 2628
 
-row_co = int(input('What is its current row coordinate?'))
-col_co = int(input('What is its current column coordinate?'))
 grid_size = 10
 max_row = grid_size - 1
 max_col = grid_size - 1
+row_co = random.randint(0, max_row)
+col_co = random.randint(0, max_col)
 
-init_dir = input('What is its initial direction [n|s|e|w]?')
+init_dir = random.choice(['n','s','w','e'])
 
 print(f'Hello. My name is {name}. My ID is {identifier}.')
 
