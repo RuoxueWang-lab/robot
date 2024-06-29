@@ -22,7 +22,15 @@ row_co = random.randint(0, max_row)
 col_co = random.randint(0, max_col)
 
 # Generate a random moving direction for the robot
-init_dir = random.choice(['n','s','w','e'])
+direction_index = random.randint(0, 3)
+if direction_index == 0:
+    direction = "n"
+elif direction_index == 1:
+    direction = "e"
+elif direction_index == 2:
+    direction = "s"
+else:
+    direction = "w"
 
 # Clip the coordinates to be inside the grid
 if row_co < 0:
@@ -48,54 +56,77 @@ else:
 quadrant = f"{row_quadrant} {col_quadrant}"
 
 # Generate a string representation for the direction, for printing
-if init_dir == "n":
+if direction == "n":
     direction_string = "North"
-elif init_dir == "s":
+elif direction == "s":
     direction_string = "South"
-elif init_dir == "e":
+elif direction == "e":
     direction_string = "East"
-elif init_dir == "w":
+elif direction == "w":
     direction_string = "West"
 
 # The robot talks!
 print(f"Hello. My name is {name}. My ID is {identifier}.")
 
-# Moving the robot until it hits the wall of the grid
-while True:
-    if init_dir == "n":
+# Moving the robot until it hits the cell that has Ribena:
+while (row_co != 9) or (col_co != 9):
+    # Moving the robot all the way to the grid's edge and change the direction by 90 degrees clockwise when it hits the edge.
+    if direction == "n":
         while row_co > 0:
             print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
             # Move the robot one step forward
             print("Moving one step forward.")
             row_co = row_co - 1
-        break
 
-    if init_dir == "s":
+    if direction == "s":
         while row_co < grid_size - 1:
             print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
             # Move the robot one step forward
             print("Moving one step forward.")
             row_co = row_co + 1
-        break
 
-    if init_dir == "w":
+    if direction == "w":
         while col_co > 0:
             print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
             # Move the robot one step forward
             print("Moving one step forward.")
             col_co = col_co - 1
-        break
 
-    if init_dir == "e":
+    if direction == "e":
         while col_co < grid_size - 1:
             print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
             # Move the robot one step forward
             print("Moving one step forward.")
             col_co = col_co + 1
+
+    if row_co == 9 and col_co == 9 :
         break
 
+    # Robot's talking:
+    print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
+    print("I have a wall in front of me.")
+
+    # Turning the robot:
+    print("Turning 90 degrees clockwise.")
+    # Fancy solution: add one to direction index above to move to the next clockwise direction
+        # Use modulus to get the number to cycle back to 0 if the number is more than 3 (so (3+1) % 4 == 0)
+    direction_index = (direction_index + 1) % 4
+    if direction_index == 0:
+        direction = "n"
+        direction_string = "North"
+    elif direction_index == 1:
+        direction = "e"
+        direction_string = "East"
+    elif direction_index == 2:
+        direction = "s"
+        direction_string = "South"
+    else:
+        direction = "w"
+        direction_string = "West"
+
 print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
-print("I have a wall in front of me.")
+print(f"I am drinking Ribena! I am happy!")
+
 
 
 # Update the quadrant
