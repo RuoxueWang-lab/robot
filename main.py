@@ -59,24 +59,44 @@ elif init_dir == "w":
 
 # The robot talks!
 print(f"Hello. My name is {name}. My ID is {identifier}.")
-print(f"My current location is ({row_co}, {col_co}). I am in the {quadrant} quadrant.")
-print(f"I am facing {direction_string}.")
 
-# Move the robot one step forward
-print("Moving one step forward.")
+# Moving the robot until it hits the wall of the grid
+while True:
+    if init_dir == "n":
+        while row_co > 0:
+            print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
+            # Move the robot one step forward
+            print("Moving one step forward.")
+            row_co = row_co - 1
+        break
 
-if init_dir == "n":
-    if row_co > 0:
-        row_co = row_co - 1
-if init_dir == "s":
-    if row_co < grid_size - 1:
-        row_co = row_co + 1
-if init_dir == "w":
-    if col_co > 0:
-        col_co = col_co - 1
-if init_dir == "e":
-    if col_co < grid_size - 1:
-        col_co = col_co + 1
+    if init_dir == "s":
+        while row_co < grid_size - 1:
+            print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
+            # Move the robot one step forward
+            print("Moving one step forward.")
+            row_co = row_co + 1
+        break
+
+    if init_dir == "w":
+        while col_co > 0:
+            print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
+            # Move the robot one step forward
+            print("Moving one step forward.")
+            col_co = col_co - 1
+        break
+
+    if init_dir == "e":
+        while col_co < grid_size - 1:
+            print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
+            # Move the robot one step forward
+            print("Moving one step forward.")
+            col_co = col_co + 1
+        break
+
+print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
+print("I have a wall in front of me.")
+
 
 # Update the quadrant
 if 0 <= row_co <= max_row // 2:
@@ -92,4 +112,4 @@ else:
 quadrant = f"{row_quadrant} {col_quadrant}"
 
 # Print the updated location and quadrant
-print(f"My current location is ({row_co}, {col_co}). I am in the {quadrant} quadrant.")
+#print(f"My current location is ({row_co}, {col_co}). I am in the {quadrant} quadrant.")
