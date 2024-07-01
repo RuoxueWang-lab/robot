@@ -1,146 +1,274 @@
-"""
-My amazing robot!
-"""
-
 import random
 
-# Get the robot's name from the user
-name = input('What is the name of the robot?')
 
-# Set ID for the robot
-identifier = 2628
+def robot_setup(grid_size=10):
+    """ Initialize the robot's name, ID, initial coordinates and direction.
 
-# Maximum number of grid cells (rows and columns)
-grid_size = 10
+    Extended description of function
 
-# Maximum row and column indices
-max_row = grid_size - 1
-max_col = grid_size - 1
+    Args:
+        grid_size (int): The size of the grid. Defalts to 10.
 
-# Generate random initial coordinates for the robot
-row_co = random.randint(0, max_row)
-col_co = random.randint(0, max_col)
+    Returns:
+        str : Robot name
+        int : Robot ID
+        int : Robot's row coordinate
+        int : Robot's column coordinate
+        str : Robot's direction ("n", "s", "e", or "w")
+    """
+    name = input("What is the name for your robot?")
+    identifier = 2628
+    row = random.randint(0, grid_size-1)
+    col = random.randint(0, grid_size-1)
+    direction = random.choice(["n", "s", "e","w"])
 
-# Generate a random moving direction for the robot
-direction_index = random.randint(0, 3)
-if direction_index == 0:
-    direction = "n"
-elif direction_index == 1:
-    direction = "e"
-elif direction_index == 2:
-    direction = "s"
-else:
-    direction = "w"
+    return (name, identifier, row, col, direction)
 
-# Clip the coordinates to be inside the grid
-if row_co < 0:
-    row_co = 0
-elif row_co > max_row:
-    row_co = max_row
-if col_co < 0:
-    col_co = 0
-elif col_co > max_col:
-    col_co = max_col
 
-# Compute the quadrant
-if 0 <= row_co <= max_row // 2:
-    row_quadrant = "top"
-else:
-    row_quadrant = "bottom"
+def print_robot_greeting(name, identifier):
+    """ Print the robot's greeting.
 
-if 0 <= col_co <= max_col // 2:
-    col_quadrant = "left"
-else:
-    col_quadrant = "right"
+    Extended description of function
 
-quadrant = f"{row_quadrant} {col_quadrant}"
+    Args:
+        name (str): the name of robot
+        ID (str): the id of robot
+    """
+    return print(f"Hello. My name is {name}. My ID is {identifier}.")
 
-# Generate a string representation for the direction, for printing
-if direction == "n":
-    direction_string = "North"
-elif direction == "s":
-    direction_string = "South"
-elif direction == "e":
-    direction_string = "East"
-elif direction == "w":
-    direction_string = "West"
 
-# The robot talks!
-print(f"Hello. My name is {name}. My ID is {identifier}.")
+def direction_to_string(direction):
+    """ Represent direction in string form: "North", "Sounth", "East", "West"
 
-# Moving the robot until it hits the cell that has Ribena:
-while (row_co != 9) or (col_co != 9):
-    # Moving the robot all the way to the grid's edge and change the direction by 90 degrees clockwise when it hits the edge.
+    Extended description of the function
+
+    Args:
+        dirction (str): Robot's direction ("n", "s", "e", or "w")
+
+    Returns:
+        str: Robot's direction in string form ("North", "Sounth", "East", "West")
+    """
     if direction == "n":
-        while row_co > 0:
-            print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
-            # Move the robot one step forward
-            print("Moving one step forward.")
-            row_co = row_co - 1
+        direction_string = "North"
+    elif direction == "s":
+        direction_string = "South"
+    elif direction == "e":
+        direction_string = "East"
+    elif direction == "w":
+        direction_string = "West"
 
-    if direction == "s":
-        while row_co < grid_size - 1:
-            print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
-            # Move the robot one step forward
-            print("Moving one step forward.")
-            row_co = row_co + 1
+    return direction_string
 
-    if direction == "w":
-        while col_co > 0:
-            print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
-            # Move the robot one step forward
-            print("Moving one step forward.")
-            col_co = col_co - 1
 
+def direction_to_index(direction):
+    """ Assign numbers(0,1,2,3) to each direction
+
+    Extended description of function
+
+    Args:
+        direction (str): Dirction of the robot
+
+    Return:
+        int: the direction's corresponding index(0,1,2,3)
+    """
+    if direction == "n":
+        direction_index = 0
     if direction == "e":
-        while col_co < grid_size - 1:
-            print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
-            # Move the robot one step forward
-            print("Moving one step forward.")
-            col_co = col_co + 1
+        direction_index = 1
+    if direction == "s":
+        direction_index = 2
+    if direction == "w":
+        direction_index = 3
 
-    if row_co == 9 and col_co == 9 :
-        break
+    return direction_index
 
-    # Robot's talking:
-    print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
-    print("I have a wall in front of me.")
 
-    # Turning the robot:
-    print("Turning 90 degrees clockwise.")
-    # Fancy solution: add one to direction index above to move to the next clockwise direction
-        # Use modulus to get the number to cycle back to 0 if the number is more than 3 (so (3+1) % 4 == 0)
+def print_robot_positon_direction(current_row,
+                               current_col,
+                               current_direction):
+    """ Robot states its current position and next moving.
+
+    Extended description of function
+
+    Args:
+        current_row (int): The current row coordinate of the robot.
+        current_col (int): The current column coordinate of the robot.
+        current_direction (str): The current dirction("n","e","s","w") of the robot.
+    """
+    direction_string = direction_to_string(current_direction)
+    return print(f"I am currently at ({current_row}, {current_col}), facing {direction_string}.")
+
+
+
+def moving_one_step_forward(current_row, current_col, current_direction):
+    """ Move the robot one step forward
+
+    Extended description of function
+
+    Args:
+        current_row (int): The current row coordinate of the robot.
+        current_col (int): The current column coordinate of the robot.
+        current_direction (str): The current dirction("n","e","s","w") of the robot.
+
+    Returns:
+        int: Robot's new row coordinate
+        int: Robot's new column coordinate
+    """
+    print("Moving one step forward.")
+    if current_direction == 'n':
+        new_row = current_row - 1
+        new_col = current_col
+    if current_direction == 's':
+        new_row = current_row + 1
+        new_col = current_col
+    if current_direction == 'w':
+        new_col = current_col - 1
+        new_row = current_row
+    if current_direction == 'e':
+        new_col = current_col + 1
+        new_row = current_row
+
+    return (new_row, new_col)
+
+
+def rotate_90_clockwise(direction_index):
+    """ Rotate the robot by 90 degrees clockwise when it hits a wall
+
+    Extended description of function
+
+    Args:
+        direction_index (int): the corresponding index assigned to the specific direction
+
+    Returns:
+        str: Robot's direction after rotating ("n","e","s","w")
+        str: direction in stirng form ("North", "East", "South","West")
+    """
+    print("Turn 90 degrees clockwise.")
     direction_index = (direction_index + 1) % 4
     if direction_index == 0:
         direction = "n"
-        direction_string = "North"
     elif direction_index == 1:
         direction = "e"
-        direction_string = "East"
     elif direction_index == 2:
         direction = "s"
-        direction_string = "South"
     else:
         direction = "w"
-        direction_string = "West"
 
-print(f"I am currently at ({row_co}, {col_co}), facing {direction_string}.")
-print(f"I am drinking Ribena! I am happy!")
+    return direction
 
 
+def clipping_the_coordinates(current_row, current_col, grid_size):
+    """ The robot can only move insed the grid
 
-# Update the quadrant
-if 0 <= row_co <= max_row // 2:
-    row_quadrant = "top"
-else:
-    row_quadrant = "bottom"
+    Extended description of function
 
-if 0 <= col_co <= max_col // 2:
-    col_quadrant = "left"
-else:
-    col_quadrant = "right"
+    Args:
+        current_row (int): The current row coordinate of the robot.
+        current_col (int): The current column coordinate of the robot.
+        grid_size (str): The size of the grid.
 
-quadrant = f"{row_quadrant} {col_quadrant}"
+    Returns:
+        int: The new row coordinate of the robot.
+        int: The new column coordinate of the robot.
+    """
+    if current_row < 0:
+        new_row = 0
+    elif current_row > grid_size-1:
+        new_row = grid_size-1
+    if current_col < 0:
+        new_col = 0
+    elif current_col > grid_size-1:
+        new_col = grid_size-1
 
-# Print the updated location and quadrant
-#print(f"My current location is ({row_co}, {col_co}). I am in the {quadrant} quadrant.")
+    return (new_row, new_col)
+
+
+def navigate_to_wall(current_direction,
+             current_row,
+             current_col,
+             grid_size):
+    """ Navigate the robot to until
+
+    Extended description of function
+
+    current_direction (str): The current dirction("n","e","s","w") of the robot.
+    current_row (int): The current row coordinate of the robot.
+    current_col (int): The current column coordinate of the robot.
+    grid_size (str): The size of the grid.
+
+    Returns:
+        int: The new row coordinate of the robot.
+        int: The new column coordinate of the robot.
+    """
+    if current_direction == "n":
+        while current_row > 0:
+            print_robot_positon_direction(current_row, current_col, current_direction)
+            current_row, current_col = moving_one_step_forward(current_row, current_col, current_direction)
+    if current_direction == "s":
+        while current_row < grid_size-1:
+            print_robot_positon_direction(current_row, current_col, current_direction)
+            current_row, current_col = moving_one_step_forward(current_row, current_col, current_direction)
+    if current_direction == "w":
+        while current_col > 0:
+            print_robot_positon_direction(current_row, current_col, current_direction)
+            current_row, current_col = moving_one_step_forward(current_row, current_col, current_direction)
+    if current_direction == "e":
+        while current_col < grid_size-1:
+            print_robot_positon_direction(current_row, current_col, current_direction)
+            current_row, current_col = moving_one_step_forward(current_row, current_col, current_direction)
+
+    print_robot_positon_direction(current_row, current_col, current_direction)
+
+    return current_row, current_col
+
+
+def navigate_to_target_position(current_row,
+                                current_col,
+                                current_direction,
+                                target_row,
+                                target_col,
+                                grid_size):
+    """ Navigate to out targer position. Defalts to (9, 9)
+
+    Extended description of function
+
+    Args:
+        current_direction (str): The current dirction("n","e","s","w") of the robot.
+        current_row (int): The current row coordinate of the robot.
+        current_col (int): The current column coordinate of the robot.
+        target_row (int): The target row coordinate. Defaults to 9.
+        target_col (int): The target column coordinate. Defaults to 9.
+        grid_size (str): The size of the grid.
+    """
+    while current_row!=9 or current_col!=9:
+        current_row, current_col = navigate_to_wall(current_direction, current_row, current_col, grid_size)
+        if current_row==9 and current_col==9:
+            print("I am drinking Ribena! I am happy!")
+            break
+        print("I have a wall in front of me.")
+        direction_index = direction_to_index(current_direction)
+        current_direction = rotate_90_clockwise(direction_index)
+
+    return None
+
+def run_simulation(grid_size=10, target_row=9, target_col=9):
+    """ Start robot navigation simulation.
+
+    Extended description of function
+
+    Args:
+        grid_size (int): The size of the grid. Defaults to 10.
+        target_row (int): The target row coordinate. Defaults to 9.
+        target_col (int): The target column coordinate. Defaults to 9.
+    """
+    name, id, row, col, direction = robot_setup(grid_size)
+
+    print_robot_greeting(name, id)
+
+    navigate_to_target_position(row, col, direction, target_row, target_col, grid_size)
+
+
+
+
+grid_size = 10
+run_simulation(grid_size=grid_size)
