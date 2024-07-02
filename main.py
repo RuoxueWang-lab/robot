@@ -37,12 +37,11 @@ def robot_setup(filename, grid_size=10):
     """
     names = load_names_from_file(filename)
     name = random.choice(names)
-    identifier = 2628
     row = random.randint(0, grid_size-1)
     col = random.randint(0, grid_size-1)
     direction = random.choice(["n", "s", "e","w"])
 
-    return (name, identifier, row, col, direction)
+    return (name,row, col, direction)
 
 
 def print_robot_greeting(name, id):
@@ -292,7 +291,7 @@ def generate_target_row_col(name):
     Extended description of function
 
     Args:
-        names (list):A list of robot's names.
+        name (str): Robot's name.
 
     Returns:
         int: Target row coordinate.
@@ -361,13 +360,39 @@ def create_several_robots(number, filename):
     cols =[]
     directions = []
     for _ in range(0, number):
-        name, id, row, col, direction = robot_setup(filename, grid_size=10)
+        name, row, col, direction = robot_setup(filename, grid_size=10)
         names.append(name)
+        id = id_generator(name)
         ids.append(id)
         rows.append(row)
         cols.append(col)
         directions.append(direction)
     return (names, ids, rows, cols, directions)
+
+
+def id_generator(name):
+    """Generate specific id for each robot
+
+    Extended details of function
+
+    Args:
+        name (str): Robot's name.
+
+    Returns:
+        int: Robot's id"""
+
+    if name=='shameer':
+        identifier = 2628
+    if name=='ruoxue':
+        identifier = 2629
+    if name=='emma':
+        identifier = 2630
+    if name=='olivia':
+        identifier = 2631
+    return identifier
+
+
+
 
 def print_search_for_drink(name):
     return print(f"{name} is searching for its drink.")
