@@ -39,12 +39,13 @@ def robot_setup(filename, grid_size=10):
     name = random.choice(names)
     row = random.randint(0, grid_size-1)
     col = random.randint(0, grid_size-1)
+    position = (row, col)
     direction = random.choice(["n", "s", "e","w"])
 
-    return (name,row, col, direction)
+    return (name, position, direction)
 
 
-def print_robot_greeting(name, id):
+def print_robot_greeting(name, identifier):
     """ Print the robot's greeting.
 
     Extended description of function
@@ -53,7 +54,7 @@ def print_robot_greeting(name, id):
         name (str): the name of robot
         id (str): the id of robot
     """
-    return print(f"Hello. My name is {name}. My ID is {id}.")
+    return print(f"Hello. My name is {name}. My ID is {identifier}.")
 
 
 def print_robots_greeting(name_list, id_list):
@@ -116,38 +117,35 @@ def direction_to_index(direction):
     return direction_index
 
 
-def print_robot_positon_direction(current_row,
-                               current_col,
-                               current_direction):
+def print_robot_positon_direction(current_position,
+                                  current_direction):
     """ Robot states its current position and next moving.
 
     Extended description of function
 
     Args:
-        current_row (int): The current row coordinate of the robot.
-        current_col (int): The current column coordinate of the robot.
+        current_position (tup): The current coordinates of the robot.
         current_direction (str): The current dirction("n","e","s","w") of the robot.
     """
     direction_string = direction_to_string(current_direction)
-    return print(f"I am currently at ({current_row}, {current_col}), facing {direction_string}.")
+    return print(f"I am currently at {current_position}, facing {direction_string}.")
 
 
 
-def moving_one_step_forward(current_row, current_col, current_direction):
+def moving_one_step_forward(current_position, current_direction):
     """ Move the robot one step forward
 
     Extended description of function
 
     Args:
-        current_row (int): The current row coordinate of the robot.
-        current_col (int): The current column coordinate of the robot.
+        current_position (tup): The current coordinates of the robot.
         current_direction (str): The current dirction("n","e","s","w") of the robot.
 
     Returns:
-        int: Robot's new row coordinate
-        int: Robot's new column coordinate
+        tuple: The new position of the robot.
     """
     print("Moving one step forward.")
+    current_row, current_col = current_position
     if current_direction == 'n':
         new_row = current_row - 1
         new_col = current_col
@@ -161,7 +159,9 @@ def moving_one_step_forward(current_row, current_col, current_direction):
         new_col = current_col + 1
         new_row = current_row
 
-    return (new_row, new_col)
+    new_position = tuple([new_row, new_col])
+
+    return new_position
 
 
 def rotate_90_clockwise(direction_index):
@@ -190,20 +190,19 @@ def rotate_90_clockwise(direction_index):
     return direction
 
 
-def clipping_the_coordinates(current_row, current_col, grid_size):
+def clipping_the_coordinates(current_position, grid_size):
     """ The robot can only move insed the grid
 
     Extended description of function
 
     Args:
-        current_row (int): The current row coordinate of the robot.
-        current_col (int): The current column coordinate of the robot.
+        current_position (tup): The current coordinates of the robot.
         grid_size (str): The size of the grid.
 
     Returns:
-        int: The new row coordinate of the robot.
-        int: The new column coordinate of the robot.
+        tuple: The new position of the robot.
     """
+    current_row, current_col = current_position
     if current_row < 0:
         new_row = 0
     elif current_row > grid_size-1:
@@ -213,53 +212,50 @@ def clipping_the_coordinates(current_row, current_col, grid_size):
     elif current_col > grid_size-1:
         new_col = grid_size-1
 
-    return (new_row, new_col)
+    new_positon = tuple([new_row, new_col])
+
+    return new_positon
 
 
 def navigate_to_wall(current_direction,
-             current_row,
-             current_col,
+             current_position,
              grid_size):
     """ Navigate the robot to until
 
     Extended description of function
 
     current_direction (str): The current dirction("n","e","s","w") of the robot.
-    current_row (int): The current row coordinate of the robot.
-    current_col (int): The current column coordinate of the robot.
+    current_position (tup): The current coordinates of the robot.
     grid_size (str): The size of the grid.
 
     Returns:
-        int: The new row coordinate of the robot.
-        int: The new column coordinate of the robot.
+        tupel: The new position of the robot.
     """
     if current_direction == "n":
-        while current_row > 0:
-            print_robot_positon_direction(current_row, current_col, current_direction)
-            current_row, current_col = moving_one_step_forward(current_row, current_col, current_direction)
+        while current_position[0] > 0:
+            print_robot_positon_direction(current_position, current_direction)
+            current_position = moving_one_step_forward(current_position, current_direction)
     if current_direction == "s":
-        while current_row < grid_size-1:
-            print_robot_positon_direction(current_row, current_col, current_direction)
-            current_row, current_col = moving_one_step_forward(current_row, current_col, current_direction)
+        while current_position[0] < grid_size-1:
+            print_robot_positon_direction(current_position, current_direction)
+            current_position = moving_one_step_forward(current_position, current_direction)
     if current_direction == "w":
-        while current_col > 0:
-            print_robot_positon_direction(current_row, current_col, current_direction)
-            current_row, current_col = moving_one_step_forward(current_row, current_col, current_direction)
+        while current_position[1] > 0:
+            print_robot_positon_direction(current_position, current_direction)
+            current_position = moving_one_step_forward(current_position, current_direction)
     if current_direction == "e":
-        while current_col < grid_size-1:
-            print_robot_positon_direction(current_row, current_col, current_direction)
-            current_row, current_col = moving_one_step_forward(current_row, current_col, current_direction)
+        while current_position[1] < grid_size-1:
+            print_robot_positon_direction(current_position, current_direction)
+            current_position = moving_one_step_forward(current_position, current_direction)
 
-    print_robot_positon_direction(current_row, current_col, current_direction)
+    print_robot_positon_direction(current_position, current_direction)
 
-    return current_row, current_col
+    return current_position
 
 
-def navigate_to_target_position(current_row,
-                                current_col,
+def navigate_to_target_position(current_position,
                                 current_direction,
-                                target_row,
-                                target_col,
+                                target_position,
                                 grid_size):
     """ Navigate to out targer position. Defalts to (9, 9)
 
@@ -267,15 +263,13 @@ def navigate_to_target_position(current_row,
 
     Args:
         current_direction (str): The current dirction("n","e","s","w") of the robot.
-        current_row (int): The current row coordinate of the robot.
-        current_col (int): The current column coordinate of the robot.
-        target_row (int): The target row coordinate. Defaults to 9.
-        target_col (int): The target column coordinate. Defaults to 9.
+        current_position (tup): The current coordinates of the robot.
+        target_position (tup): The current coordinates of the target cell.
         grid_size (str): The size of the grid.
     """
-    while current_row!=target_row or current_col!=target_col:
-        current_row, current_col = navigate_to_wall(current_direction, current_row, current_col, grid_size)
-        if current_row==target_row and current_col==target_col:
+    while current_position[0]!=target_position[0] or current_position[1]!=target_position[1]:
+        current_position = navigate_to_wall(current_direction, current_position, grid_size)
+        if current_position[0]==target_position[0] and current_position[1]==target_position[1]:
             print("I am drinking Ribena! I am happy!")
             break
         print("I have a wall in front of me.")
@@ -298,19 +292,15 @@ def generate_target_row_col(name):
         int: Target column coordinate
         """
     if name=='shameer':
-        target_row = 0
-        target_col = 0
+        target_position = tuple([0,0])
     if name=='ruoxue':
-        target_row = 0
-        target_col = 9
+        target_position = tuple([0,9])
     if name=='emma':
-        target_row = 9
-        target_col = 0
+        target_position = tuple([9,0])
     if name=='olivia':
-        target_row = 9
-        target_col = 9
+        target_position = tuple([9,9])
 
-    return (target_row, target_col)
+    return target_position
 
 
 def run_simulation(number, filename, grid_size=10, target_list=[(0,0),(9,0),(0,9),(9,9)]):
@@ -324,16 +314,16 @@ def run_simulation(number, filename, grid_size=10, target_list=[(0,0),(9,0),(0,9
         grid_size (int): The size of the grid. Defaults to 10.
         terget_list (list): A list of target coordinates.
     """
-    names, ids, rows, cols, directions = create_several_robots(number, filename)
+    names, ids, positions, directions = create_several_robots(number, filename)
 
     print_robots_greeting(names, ids)
     print()
 
     for index in range(number):
-        target_row, target_col = generate_target_row_col(names[index])
+        targeted_position = generate_target_row_col(names[index])
         print_search_for_drink(names[index])
-        navigate_to_target_position(rows[index], cols[index], directions[index],
-                                    target_row, target_col, grid_size)
+        navigate_to_target_position(positions[index], directions[index],
+                                    targeted_position, grid_size)
         print()
 
     return None
@@ -356,21 +346,19 @@ def create_several_robots(number, filename):
     """
     names = []
     ids = []
-    rows = []
-    cols =[]
+    positions = []
     directions = []
     for _ in range(0, number):
-        name, row, col, direction = robot_setup(filename, grid_size=10)
+        name, position, direction = robot_setup(filename, grid_size=10)
         names.append(name)
-        id = id_generator(name)
-        ids.append(id)
-        rows.append(row)
-        cols.append(col)
+        identifier = identifiers_generator(name)
+        ids.append(identifier)
+        positions.append(position)
         directions.append(direction)
-    return (names, ids, rows, cols, directions)
+    return (names, ids, positions, directions)
 
 
-def id_generator(name):
+def identifiers_generator(name):
     """Generate specific id for each robot
 
     Extended details of function
@@ -379,23 +367,20 @@ def id_generator(name):
         name (str): Robot's name.
 
     Returns:
-        int: Robot's id"""
-
+        int: Robot's identfier.
+    """
     if name=='shameer':
-        identifier = 2628
+        id1 = 2628
     if name=='ruoxue':
-        identifier = 2629
+        id1 = 2629
     if name=='emma':
-        identifier = 2630
+        id1 = 2630
     if name=='olivia':
-        identifier = 2631
-    return identifier
-
-
+        id1 = 2631
+    return id1
 
 
 def print_search_for_drink(name):
     return print(f"{name} is searching for its drink.")
-
 
 run_simulation(3, "robot_names.txt")
