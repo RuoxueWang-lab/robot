@@ -1,13 +1,32 @@
 import random
 
 
-def robot_setup(grid_size=10):
+def load_names_from_file(filename):
+    """Load the robot's name in our robot_names.txt
+
+    Extended description of function
+
+    Args:
+        filename (str): the name of the file where you reserve the robot's name
+
+    Returns:
+        list: A list of robot's names."""
+    names = []
+    textfile = open(filename)
+    for line in textfile:
+        name = line.strip()
+        names.append(name)
+    return names
+
+
+def robot_setup(filename, grid_size=10):
     """ Initialize the robot's name, ID, initial coordinates and direction.
 
     Extended description of function
 
     Args:
         grid_size (int): The size of the grid. Defalts to 10.
+        filename (str): The name of the file where you reserve the robot's name
 
     Returns:
         str : Robot name
@@ -16,7 +35,8 @@ def robot_setup(grid_size=10):
         int : Robot's column coordinate
         str : Robot's direction ("n", "s", "e", or "w")
     """
-    name = input("What is the name for your robot?")
+    names = load_names_from_file(filename)
+    name = random.choice(names)
     identifier = 2628
     row = random.randint(0, grid_size-1)
     col = random.randint(0, grid_size-1)
@@ -261,7 +281,7 @@ def run_simulation(grid_size=10, target_row=9, target_col=9):
         target_row (int): The target row coordinate. Defaults to 9.
         target_col (int): The target column coordinate. Defaults to 9.
     """
-    name, id, row, col, direction = robot_setup(grid_size)
+    name, id, row, col, direction = robot_setup("robot_names.txt", grid_size)
 
     print_robot_greeting(name, id)
 
