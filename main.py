@@ -45,16 +45,30 @@ def robot_setup(filename, grid_size=10):
     return (name, identifier, row, col, direction)
 
 
-def print_robot_greeting(name, identifier):
+def print_robot_greeting(name, id):
     """ Print the robot's greeting.
 
     Extended description of function
 
     Args:
         name (str): the name of robot
-        ID (str): the id of robot
+        id (str): the id of robot
     """
-    return print(f"Hello. My name is {name}. My ID is {identifier}.")
+    return print(f"Hello. My name is {name}. My ID is {id}.")
+
+
+def print_robots_greeting(name_list, id_list):
+    """Print a list of several robots greeting
+
+    Extended descriptionof function
+
+    Args:
+       name_list (list): A list of robot's names.
+       id_list (list): A list of robot's indentifiers.
+    """
+    for index in range(len(name_list)):
+        print_robot_greeting(name_list[index], id_list[index])
+    return None
 
 
 def direction_to_string(direction):
@@ -260,9 +274,9 @@ def navigate_to_target_position(current_row,
         target_col (int): The target column coordinate. Defaults to 9.
         grid_size (str): The size of the grid.
     """
-    while current_row!=9 or current_col!=9:
+    while current_row!=target_row or current_col!=target_col:
         current_row, current_col = navigate_to_wall(current_direction, current_row, current_col, grid_size)
-        if current_row==9 and current_col==9:
+        if current_row==target_row and current_col==target_col:
             print("I am drinking Ribena! I am happy!")
             break
         print("I have a wall in front of me.")
@@ -271,24 +285,92 @@ def navigate_to_target_position(current_row,
 
     return None
 
-def run_simulation(grid_size=10, target_row=9, target_col=9):
+
+def generate_target_row_col(name):
+    """Generate taget row coordinate and column coordinate.
+
+    Extended description of function
+
+    Args:
+        names (list):A list of robot's names.
+
+    Returns:
+        int: Target row coordinate.
+        int: Target column coordinate
+        """
+    if name=='shameer':
+        target_row = 0
+        target_col = 0
+    if name=='ruoxue':
+        target_row = 0
+        target_col = 9
+    if name=='emma':
+        target_row = 9
+        target_col = 0
+    if name=='olivia':
+        target_row = 9
+        target_col = 9
+
+    return (target_row, target_col)
+
+
+def run_simulation(number, filename, grid_size=10, target_list=[(0,0),(9,0),(0,9),(9,9)]):
     """ Start robot navigation simulation.
 
     Extended description of function
 
     Args:
+        number (int): The number of robots that you want to create.
+        filename (str): The file that reserves all the robot's name.
         grid_size (int): The size of the grid. Defaults to 10.
-        target_row (int): The target row coordinate. Defaults to 9.
-        target_col (int): The target column coordinate. Defaults to 9.
+        terget_list (list): A list of target coordinates.
     """
-    name, id, row, col, direction = robot_setup("robot_names.txt", grid_size)
+    names, ids, rows, cols, directions = create_several_robots(number, filename)
 
-    print_robot_greeting(name, id)
+    print_robots_greeting(names, ids)
+    print()
 
-    navigate_to_target_position(row, col, direction, target_row, target_col, grid_size)
+    for index in range(number):
+        target_row, target_col = generate_target_row_col(names[index])
+        print_search_for_drink(names[index])
+        navigate_to_target_position(rows[index], cols[index], directions[index],
+                                    target_row, target_col, grid_size)
+        print()
+
+    return None
 
 
+def create_several_robots(number, filename):
+    """Create different robots
+
+    Extended description of function
+
+    Args:
+        number (int): The number of robots that you want to create.
+        filename (str): The file that reserves all the robot's name.
+    Returns:
+        list: A list of robot's names
+        list: A list of robot's identifiers
+        list: A list of robot's row coordinates.
+        list: A list of robot's column coordinate.
+        list: A list of robot's directions.
+    """
+    names = []
+    ids = []
+    rows = []
+    cols =[]
+    directions = []
+    for _ in range(0, number):
+        name, id, row, col, direction = robot_setup(filename, grid_size=10)
+        names.append(name)
+        ids.append(id)
+        rows.append(row)
+        cols.append(col)
+        directions.append(direction)
+    return (names, ids, rows, cols, directions)
+
+def print_search_for_drink(name):
+    return print(f"{name} is searching for its drink.")
 
 
-grid_size = 10
-run_simulation(grid_size=grid_size)
+run_simulation(3, "robot_names.txt")
