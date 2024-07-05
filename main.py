@@ -1,5 +1,5 @@
 import random
-
+from robot import Robot
 
 def load_names_from_file(filename):
     """Load the robot's name in our robot_names.txt
@@ -64,10 +64,9 @@ def robot_setup(filename, grid_size=10):
     col = random.randint(0, grid_size-1)
     position = (row, col)
     direction = random.choice(["n", "s", "e","w"])
-    robot_dict = {"id":id, "name":name,
-                  "position":position, "direction":direction}
+    robot = Robot(id, name, position, direction)
 
-    return robot_dict
+    return robot
 
 
 def create_several_robots(number, filename):
@@ -85,11 +84,11 @@ def create_several_robots(number, filename):
         list: A list of robot's column coordinate.
         list: A list of robot's directions.
     """
-    robots_dict_list = []
-    for _ in range(0, number):
-        robot_dict = robot_setup(filename, grid_size=10)
-        robots_dict_list.append(robot_dict)
-    return robots_dict_list
+    robots_list = []
+    for _ in range(number):
+        robot_single = robot_setup(filename, grid_size=10)
+        robots_list.append(robot_single)
+    return robots_list
 
 
 def indexed_robots_dict_list(robots_dict_list):
@@ -110,8 +109,8 @@ def indexed_robots_dict_list(robots_dict_list):
     return robots_dict
 
 
-def print_search_for_drink(robot_dict):
-    name = robot_dict["name"]
+def print_search_for_drink(robot):
+    name = robot.name
     return print(f"{name} is searching for its drink.")
 
 
@@ -127,7 +126,7 @@ def print_robot_greeting(name, identifier):
     return print(f"Hello. My name is {name}. My ID is {identifier}.")
 
 
-def print_robots_greeting(robots_dict_list):
+def print_robots_greeting(robots_list):
     """Print a list of several robots greeting
 
     Extended descriptionof function
@@ -136,12 +135,12 @@ def print_robots_greeting(robots_dict_list):
        name_list (list): A list of robot's names.
        id_list (list): A list of robot's indentifiers.
     """
-    for dic in robots_dict_list:
-        print_robot_greeting(dic["name"], dic["id"])
+    for robot in robots_list:
+        print_robot_greeting(robot.name, robot.identifier)
     return None
 
 
-def direction_to_string(robot_dict):
+def direction_to_string(robot):
     """ Represent direction in string form: "North", "Sounth", "East", "West"
 
     Extended description of the function
@@ -152,19 +151,19 @@ def direction_to_string(robot_dict):
     Returns:
         str: Robot's direction in string form ("North", "Sounth", "East", "West")
     """
-    if robot_dict["direction"] == "n":
+    if robot.direction == "n":
         direction_string = "North"
-    elif robot_dict["direction"] == "s":
+    elif robot.direction == "s":
         direction_string = "South"
-    elif robot_dict["direction"] == "e":
+    elif robot.direction == "e":
         direction_string = "East"
-    elif robot_dict["direction"] == "w":
+    elif robot.direction == "w":
         direction_string = "West"
 
     return direction_string
 
 
-def direction_to_index(robot_dict):
+def direction_to_index(robot):
     """ Assign numbers(0,1,2,3) to each direction
 
     Extended description of function
@@ -175,19 +174,19 @@ def direction_to_index(robot_dict):
     Return:
         int: the direction's corresponding index(0,1,2,3)
     """
-    if robot_dict["direction"] == "n":
+    if robot.direction == "n":
         direction_index = 0
-    if robot_dict["direction"] == "e":
+    if robot.direction == "e":
         direction_index = 1
-    if robot_dict["direction"] == "s":
+    if robot.direction == "s":
         direction_index = 2
-    if robot_dict["direction"] == "w":
+    if robot.direction == "w":
         direction_index = 3
 
     return direction_index
 
 
-def print_robot_positon_direction(robot_dict):
+def print_robot_positon_direction(robot):
     """ Robot states its current position and next moving.
 
     Extended description of function
@@ -196,13 +195,13 @@ def print_robot_positon_direction(robot_dict):
         current_position (tup): The current coordinates of the robot.
         current_direction (str): The current dirction("n","e","s","w") of the robot.
     """
-    direction_string = direction_to_string(robot_dict)
-    position = robot_dict["position"]
+    direction_string = direction_to_string(robot)
+    position = robot.position
     return print(f"I am currently at {position}, facing {direction_string}.")
 
 
 
-def moving_one_step_forward(robot_dict):
+def moving_one_step_forward(robot):
     """ Move the robot one step forward
 
     Extended description of function
@@ -215,26 +214,26 @@ def moving_one_step_forward(robot_dict):
         tuple: The new position of the robot.
     """
     print("Moving one step forward.")
-    current_row, current_col = robot_dict["position"]
-    if robot_dict["direction"] == 'n':
+    current_row, current_col = robot.position
+    if robot.direction == 'n':
         new_row = current_row - 1
         new_col = current_col
-    if robot_dict["direction"] == 's':
+    if robot.direction == 's':
         new_row = current_row + 1
         new_col = current_col
-    if robot_dict["direction"] == 'w':
+    if robot.direction == 'w':
         new_col = current_col - 1
         new_row = current_row
-    if robot_dict["direction"] == 'e':
+    if robot.direction == 'e':
         new_col = current_col + 1
         new_row = current_row
 
-    robot_dict["position"] = tuple([new_row, new_col])
+    robot.position = tuple([new_row, new_col])
 
-    return robot_dict
+    return robot
 
 
-def rotate_90_clockwise(direction_index, robot_dict):
+def rotate_90_clockwise(direction_index, robot):
     """ Rotate the robot by 90 degrees clockwise when it hits a wall
 
     Extended description of function
@@ -249,18 +248,18 @@ def rotate_90_clockwise(direction_index, robot_dict):
     print("Turn 90 degrees clockwise.")
     direction_index = (direction_index + 1) % 4
     if direction_index == 0:
-        robot_dict["direction"] = "n"
+        robot.direction = "n"
     elif direction_index == 1:
-        robot_dict["direction"] = "e"
+        robot.direction = "e"
     elif direction_index == 2:
-        robot_dict["direction"] = "s"
+        robot.direction = "s"
     else:
-        robot_dict["direction"] = "w"
+        robot.direction = "w"
 
-    return robot_dict
+    return robot
 
 
-def clipping_the_coordinates(robot_dict, grid_size):
+def clipping_the_coordinates(robot, grid_size):
     """ The robot can only move insed the grid
 
     Extended description of function
@@ -272,7 +271,7 @@ def clipping_the_coordinates(robot_dict, grid_size):
     Returns:
         tuple: The new position of the robot.
     """
-    current_row, current_col = robot_dict["position"]
+    current_row, current_col = robot.position
     if current_row < 0:
         new_row = 0
     elif current_row > grid_size-1:
@@ -282,12 +281,12 @@ def clipping_the_coordinates(robot_dict, grid_size):
     elif current_col > grid_size-1:
         new_col = grid_size-1
 
-    robot_dict["position"] = tuple([new_row, new_col])
+    robot.position = tuple([new_row, new_col])
 
-    return robot_dict
+    return robot
 
 
-def navigate_to_wall(robot_dict, grid_size):
+def navigate_to_wall(robot, grid_size):
     """ Navigate the robot to until
 
     Extended description of function
@@ -299,34 +298,34 @@ def navigate_to_wall(robot_dict, grid_size):
     Returns:
         tupel: The new position of the robot.
     """
-    if robot_dict["direction"] == "n":
-        current_position = robot_dict["position"]
+    if robot.direction == "n":
+        current_position = robot.position
         while current_position[0] > 0:
-            print_robot_positon_direction(robot_dict)
-            current_position = moving_one_step_forward(robot_dict)["position"]
-    if robot_dict["direction"] == "s":
-        current_position = robot_dict["position"]
+            print_robot_positon_direction(robot)
+            current_position = moving_one_step_forward(robot).position
+    if robot.direction == "s":
+        current_position = robot.position
         while current_position[0] < grid_size-1:
-            print_robot_positon_direction(robot_dict)
-            current_position = moving_one_step_forward(robot_dict)["position"]
-    if robot_dict["direction"] == "w":
-        current_position = robot_dict["position"]
+            print_robot_positon_direction(robot)
+            current_position = moving_one_step_forward(robot).position
+    if robot.direction == "w":
+        current_position = robot.position
         while current_position[1] > 0:
-            print_robot_positon_direction(robot_dict)
-            current_position = moving_one_step_forward(robot_dict)["position"]
-    if robot_dict["direction"] == "e":
-        current_position = robot_dict["position"]
+            print_robot_positon_direction(robot)
+            current_position = moving_one_step_forward(robot).position
+    if robot.direction == "e":
+        current_position = robot.position
         while current_position[1] < grid_size-1:
-            print_robot_positon_direction(robot_dict)
-            current_position = moving_one_step_forward(robot_dict)["position"]
+            print_robot_positon_direction(robot)
+            current_position = moving_one_step_forward(robot).position
 
-    robot_dict["position"] = current_position
-    print_robot_positon_direction(robot_dict)
+    robot.position = current_position
+    print_robot_positon_direction(robot)
 
-    return robot_dict
+    return robot
 
 
-def navigate_to_target_position(robot_dict,
+def navigate_to_target_position(robot,
                                 target_position,
                                 grid_size):
     """ Navigate to out targer position. Defalts to (9, 9)
@@ -339,20 +338,20 @@ def navigate_to_target_position(robot_dict,
         target_position (tup): The current coordinates of the target cell.
         grid_size (str): The size of the grid.
     """
-    current_position = robot_dict["position"]
+    current_position = robot.position
     while current_position[0]!=target_position[0] or current_position[1]!=target_position[1]:
-        current_position = navigate_to_wall(robot_dict, grid_size)["position"]
+        current_position = navigate_to_wall(robot, grid_size).position
         if current_position[0]==target_position[0] and current_position[1]==target_position[1]:
             print("I am drinking Ribena! I am happy!")
             break
         print("I have a wall in front of me.")
-        direction_index = direction_to_index(robot_dict)
-        current_position = rotate_90_clockwise(direction_index,robot_dict)["position"]
+        direction_index = direction_to_index(robot)
+        current_position = rotate_90_clockwise(direction_index,robot).position
 
     return None
 
 
-def generate_target_row_col(robot_dict):
+def generate_target_row_col(robot):
     """Generate taget row coordinate and column coordinate.
 
     Extended description of function
@@ -364,13 +363,13 @@ def generate_target_row_col(robot_dict):
         int: Target row coordinate.
         int: Target column coordinate
         """
-    if robot_dict["name"]=='shameer':
+    if robot.name=='shameer':
         target_position = tuple([0,0])
-    if robot_dict["name"]=='ruoxue':
+    if robot.name=='ruoxue':
         target_position = tuple([0,9])
-    if robot_dict["name"]=='emma':
+    if robot.name=='emma':
         target_position = tuple([9,0])
-    if robot_dict["name"]=='olivia':
+    if robot.name=='olivia':
         target_position = tuple([9,9])
 
     return target_position
@@ -387,18 +386,17 @@ def run_simulation(number, filename, grid_size=10, target_list=[(0,0),(9,0),(0,9
         grid_size (int): The size of the grid. Defaults to 10.
         terget_list (list): A list of target coordinates.
     """
-    robots_dict_list = create_several_robots(number, filename)
+    robots_list = create_several_robots(number, filename)
 
-    print_robots_greeting(robots_dict_list)
+    print_robots_greeting(robots_list)
     print()
 
-    for robot_dict in robots_dict_list:
-        targeted_position = generate_target_row_col(robot_dict)
-        print_search_for_drink(robot_dict)
-        navigate_to_target_position(robot_dict,targeted_position, grid_size)
+    for robot in robots_list:
+        targeted_position = generate_target_row_col(robot)
+        print_search_for_drink(robot)
+        navigate_to_target_position(robot,targeted_position, grid_size)
         print()
 
     return None
 
-#run_simulation(3, "robot_names.txt")
-print(indexed_robots_dict_list(create_several_robots(3, "robot_names.txt")))
+run_simulation(3, "robot_names.txt")
