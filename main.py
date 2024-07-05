@@ -4,8 +4,6 @@ from robot import Robot
 def load_names_from_file(filename):
     """Load the robot's name in our robot_names.txt
 
-    Extended description of function
-
     Args:
         filename (str): the name of the file where you reserve the robot's name
 
@@ -21,8 +19,6 @@ def load_names_from_file(filename):
 
 def identifiers_generator(name):
     """Generate specific id for each robot
-
-    Extended details of function
 
     Args:
         name (str): Robot's name.
@@ -44,18 +40,12 @@ def identifiers_generator(name):
 def robot_setup(filename, grid_size=10):
     """ Initialize the robot's name, ID, initial coordinates and direction.
 
-    Extended description of function
-
     Args:
         grid_size (int): The size of the grid. Defalts to 10.
         filename (str): The name of the file where you reserve the robot's name
 
     Returns:
-        str : Robot name
-        int : Robot ID
-        int : Robot's row coordinate
-        int : Robot's column coordinate
-        str : Robot's direction ("n", "s", "e", or "w")
+        Robot:
     """
     names = load_names_from_file(filename)
     name = random.choice(names)
@@ -71,8 +61,6 @@ def robot_setup(filename, grid_size=10):
 
 def create_several_robots(number, filename):
     """Create different robots
-
-    Extended description of function
 
     Args:
         number (int): The number of robots that you want to create.
@@ -93,8 +81,6 @@ def create_several_robots(number, filename):
 
 def indexed_robots_dict_list(robots_dict_list):
     """ Put the dictinory of each robot into a single dictionary where keys are their ids
-
-    Extended description of function
 
     Args:
         robots_dict_list (list): A list of robots personal information dictionaries.
@@ -117,8 +103,6 @@ def print_search_for_drink(robot):
 def print_robot_greeting(name, identifier):
     """ Print the robot's greeting.
 
-    Extended description of function
-
     Args:
         name (str): the name of robot
         id (str): the id of robot
@@ -129,21 +113,17 @@ def print_robot_greeting(name, identifier):
 def print_robots_greeting(robots_list):
     """Print a list of several robots greeting
 
-    Extended descriptionof function
-
     Args:
        name_list (list): A list of robot's names.
        id_list (list): A list of robot's indentifiers.
     """
     for robot in robots_list:
-        print_robot_greeting(robot.name, robot.identifier)
+        robot.greet()
     return None
 
 
 def direction_to_string(robot):
     """ Represent direction in string form: "North", "Sounth", "East", "West"
-
-    Extended description of the function
 
     Args:
         dirction (str): Robot's direction ("n", "s", "e", or "w")
@@ -166,8 +146,6 @@ def direction_to_string(robot):
 def direction_to_index(robot):
     """ Assign numbers(0,1,2,3) to each direction
 
-    Extended description of function
-
     Args:
         direction (str): Dirction of the robot
 
@@ -189,8 +167,6 @@ def direction_to_index(robot):
 def print_robot_positon_direction(robot):
     """ Robot states its current position and next moving.
 
-    Extended description of function
-
     Args:
         current_position (tup): The current coordinates of the robot.
         current_direction (str): The current dirction("n","e","s","w") of the robot.
@@ -203,8 +179,6 @@ def print_robot_positon_direction(robot):
 
 def moving_one_step_forward(robot):
     """ Move the robot one step forward
-
-    Extended description of function
 
     Args:
         current_position (tup): The current coordinates of the robot.
@@ -236,8 +210,6 @@ def moving_one_step_forward(robot):
 def rotate_90_clockwise(direction_index, robot):
     """ Rotate the robot by 90 degrees clockwise when it hits a wall
 
-    Extended description of function
-
     Args:
         direction_index (int): the corresponding index assigned to the specific direction
 
@@ -260,9 +232,7 @@ def rotate_90_clockwise(direction_index, robot):
 
 
 def clipping_the_coordinates(robot, grid_size):
-    """ The robot can only move insed the grid
-
-    Extended description of function
+    """ The robot can only move inside the grid
 
     Args:
         current_position (tup): The current coordinates of the robot.
@@ -289,8 +259,7 @@ def clipping_the_coordinates(robot, grid_size):
 def navigate_to_wall(robot, grid_size):
     """ Navigate the robot to until
 
-    Extended description of function
-
+    Args:
     current_direction (str): The current dirction("n","e","s","w") of the robot.
     current_position (tup): The current coordinates of the robot.
     grid_size (str): The size of the grid.
@@ -330,8 +299,6 @@ def navigate_to_target_position(robot,
                                 grid_size):
     """ Navigate to out targer position. Defalts to (9, 9)
 
-    Extended description of function
-
     Args:
         current_direction (str): The current dirction("n","e","s","w") of the robot.
         current_position (tup): The current coordinates of the robot.
@@ -353,8 +320,6 @@ def navigate_to_target_position(robot,
 
 def generate_target_row_col(robot):
     """Generate taget row coordinate and column coordinate.
-
-    Extended description of function
 
     Args:
         name (str): Robot's name.
@@ -378,8 +343,6 @@ def generate_target_row_col(robot):
 def run_simulation(number, filename, grid_size=10, target_list=[(0,0),(9,0),(0,9),(9,9)]):
     """ Start robot navigation simulation.
 
-    Extended description of function
-
     Args:
         number (int): The number of robots that you want to create.
         filename (str): The file that reserves all the robot's name.
@@ -393,8 +356,8 @@ def run_simulation(number, filename, grid_size=10, target_list=[(0,0),(9,0),(0,9
 
     for robot in robots_list:
         targeted_position = generate_target_row_col(robot)
-        print_search_for_drink(robot)
-        navigate_to_target_position(robot,targeted_position, grid_size)
+        robot.print_search_for_drink()
+        robot.navigate_to_target_position(targeted_position, grid_size)
         print()
 
     return None
