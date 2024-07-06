@@ -1,10 +1,10 @@
 class Robot:
-    def __init__(self, identifier, name, position, dirction ):
+    def __init__(self, identifier, name, position, dirction, grid_size ):
         self.identifier = identifier
         self.name = name
         self.position = position
         self.direction = dirction
-
+        self.grid = grid_size
 
     def greet(self):
         return print(f"Hello. My name is {self.name}. My ID is {self.identifier}.")
@@ -92,12 +92,8 @@ class Robot:
             self.direction = "w"
 
 
-    def navigate_to_wall(self, grid_size):
-        """ Navigate the robot to until
-
-        Args:
-            grid_size (str): The size of the grid.
-        """
+    def navigate_to_wall(self):
+        """ Navigate the robot to until"""
         if self.direction == "n":
             current_position = self.position
             while current_position[0] > 0:
@@ -106,7 +102,7 @@ class Robot:
                 current_position = self.position
         if self.direction == "s":
             current_position = self.position
-            while current_position[0] < grid_size-1:
+            while current_position[0] < self.grid-1:
                 self.print_positon_direction_message()
                 self.moving_one_step_forward()
                 current_position = self.position
@@ -118,7 +114,7 @@ class Robot:
                 current_position = self.position
         if self.direction == "e":
             current_position = self.position
-            while current_position[1] < grid_size-1:
+            while current_position[1] < self.grid-1:
                 self.print_positon_direction_message()
                 self.moving_one_step_forward()
                 current_position = self.position
@@ -128,17 +124,15 @@ class Robot:
 
 
     def navigate_to_target_position(self,
-                                    target_position,
-                                    grid_size):
+                                    target_position):
         """ Navigate to out targer position. Defalts to (9, 9)
 
         Args:
             target_position (tup): The current coordinates of the target cell.
-            grid_size (str): The size of the grid.
         """
         current_position = self.position
         while current_position[0]!=target_position[0] or current_position[1]!=target_position[1]:
-            self.navigate_to_wall(grid_size)
+            self.navigate_to_wall()
             current_position = self.position
             if current_position[0]==target_position[0] and current_position[1]==target_position[1]:
                 print("I am drinking Ribena! I am happy!")
